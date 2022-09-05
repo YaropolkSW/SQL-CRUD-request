@@ -4,80 +4,117 @@ import java.sql.SQLException;
 import java.util.Scanner;
 
 public class Main {
-    private final static String CREATE = "-c";
-    private final static String READ = "-r";
-    private final static String UPDATE = "-u";
-    private final static String DELETE = "-d";
-    private final static String SPACE = " ";
+    private final static String MESSAGE = "1 для добавления таблицы\n" +
+                                          "2 для просмотра информации в строке\n" +
+                                          "3 для изменения или добавления строки\n" +
+                                          "4 для удаления строки или таблицы\n" +
+                                          "5 для выхода\n" +
+                                          "Введите запрос: ";
+    private final static int ONE = 1;
+    private final static int TWO = 2;
+    private final static int THREE = 3;
+    private final static int FOUR = 4;
+    private final static int FIVE = 5;
     private final static String REQUEST_TABLE_NAME = "Введите имя таблицы: ";
-    private final static String UPDATE_MESSAGE_CHOICE = "Вы хотите добавить строку или изменить строку?\n" +
-            "Введите \"Добавить\" или \"Изменить\": ";
-    private final static String ADD = "Добавить";
-    private final static String CHANGE = "Изменить";
-    private final static String NEW_LINE_MESSAGE = "Введите имя таблицы, brand, age_of_creation через пробел: ";
-    private final static String CHANGE_LINE_MESSAGE = "Введите имя таблицы, название столбца, который хотите " +
-            "изменить,\nа так же старое и новое значение через пробел: ";
-    private final static String DELETE_CHOICE_MESSAGE = "Вы хотите удалить таблицу или строку?\n" +
-            "Введите \"Удалить таблицу\" или \"Удалить строку\": ";
-    private final static String DELETE_LINE_MESSAGE = "Удалить строку";
-    private final static String DELETE_TABLE_MESSAGE = "Удалить таблицу";
-    private final static String REQUEST_OF_DATA = "Введите имя таблицы и id через пробел: ";
+    private final static String REQUEST_COLUMN_NAME = "Введите название столбца: " ;
+    private final static String REQUEST_ID = "Введите id: ";
+    private final static String REQUEST_BRAND = "Введите брэнд: ";
+    private final static String REQUEST_AGE_OF_PRODUCE = "Введите год изготовления: ";
+    private final static String UPDATE_MESSAGE_CHOICE = "Введите 1 чтобы добавить строку или 2, чтобы изменить строку: ";
+    private final static String DELETE_CHOICE_MESSAGE = "Введите 1 чтобы удалить таблицу или 2, чтобы Удалить строку: ";
+    private final static String REQUEST_OLD_VALUE = "Введите старое значение: ";
+    private final static String REQUEST_NEW_VALUE = "Введите новое значение: ";
+    private final static String INCORRECT_REQUEST = "Неверный запрос, введите корректный запрос!";
 
     private final static String url = "jdbc:postgresql://localhost:5432/car";
     private final static String user = "postgres";
     private final static String password = "12345";
 
     public static void main(String[] args) throws SQLException {
-        final Connection connection = DriverManager.getConnection(url, user, password);
         final Scanner scanner = new Scanner(System.in);
-        final CRUD crud = new CRUD();
-        final String table;
-        final String console;
+        final CarDAO carDAO = new CarDAO();
+        int id;
+        int console;
+        String table;
 
-        switch (scanner.nextLine()) {
-            case CREATE:
-                System.out.print(REQUEST_TABLE_NAME);
-                table = scanner.nextLine();
-                crud.create(connection, table);
-                connection.close();
-                break;
-            case READ:
-                System.out.print(REQUEST_TABLE_NAME);
-                table = scanner.nextLine();
-                crud.read(connection, table);
-                connection.close();
-                break;
-            case UPDATE:
-                System.out.print(UPDATE_MESSAGE_CHOICE);
-                console = scanner.nextLine();
-                if (console.equalsIgnoreCase(ADD)) {
-                    System.out.print(NEW_LINE_MESSAGE);
-                    table = scanner.nextLine();
-                    final String[] addInfo = table.split(SPACE);
-                    crud.update(connection, addInfo[0], addInfo[1], Integer.parseInt(addInfo[2]));
-                } else if (console.equalsIgnoreCase(CHANGE)) {
-                    System.out.print(CHANGE_LINE_MESSAGE);
-                    table = scanner.nextLine();
-                    final String[] changeInfo = table.split(SPACE);
-                    crud.update(connection, changeInfo[0], changeInfo[1], changeInfo[2], changeInfo[3]);
-                }
-                connection.close();
-                break;
-            case DELETE:
-                System.out.print(DELETE_CHOICE_MESSAGE);
-                console = scanner.nextLine();
-                if (console.equalsIgnoreCase(DELETE_TABLE_MESSAGE)) {
+        System.out.print(MESSAGE);
+
+        while (true) {
+            final Connection connection = DriverManager.getConnection(url, user, password);
+            switch (Integer.parseInt(scanner.nextLine())) {
+                case ONE:
                     System.out.print(REQUEST_TABLE_NAME);
                     table = scanner.nextLine();
-                    crud.delete(connection, table);
-                } else if (console.equalsIgnoreCase(DELETE_LINE_MESSAGE)) {
-                    System.out.print(REQUEST_OF_DATA);
+                    carDAO.create(connection, table);
+                    connection.close();
+                    break;
+                case TWO:
+                    System.out.print(REQUEST_TABLE_NAME);
                     table = scanner.nextLine();
-                    final String[] deleteInfo = table.split(SPACE);
-                    crud.delete(connection, deleteInfo[0], Integer.parseInt(deleteInfo[1]));
-                }
-                connection.close();
-                break;
+
+                    System.out.print(REQUEST_ID);
+                    id = Integer.parseInt(scanner.nextLine());
+
+                    carDAO.read(connection, table, id);
+                    connection.close();
+                    break;
+                case THREE:
+                    System.out.print(UPDATE_MESSAGE_CHOICE);
+                    console = Integer.parseInt(scanner.nextLine());
+                    if (console == ONE) {
+                        System.out.print(REQUEST_TABLE_NAME);
+                        table = scanner.nextLine();
+
+                        System.out.print(REQUEST_BRAND);
+                        final String brand = scanner.nextLine();
+
+                        System.out.print(REQUEST_AGE_OF_PRODUCE);
+                        final int ageOfProduce = Integer.parseInt(scanner.nextLine());
+
+                        carDAO.update(connection, table, brand, ageOfProduce);
+                    } else if (console == TWO) {
+                        System.out.print(REQUEST_TABLE_NAME);
+                        table = scanner.nextLine();
+
+                        System.out.print(REQUEST_COLUMN_NAME);
+                        final String columnName = scanner.nextLine();
+
+                        System.out.print(REQUEST_OLD_VALUE);
+                        final String oldValue = scanner.nextLine();
+
+                        System.out.print(REQUEST_NEW_VALUE);
+                        final String newValue = scanner.nextLine();
+
+                        carDAO.update(connection, table, columnName, oldValue, newValue);
+                    }
+                    connection.close();
+                    break;
+                case FOUR:
+                    System.out.print(DELETE_CHOICE_MESSAGE);
+                    console = Integer.parseInt(scanner.nextLine());
+                    if (console == ONE) {
+                        System.out.print(REQUEST_TABLE_NAME);
+                        table = scanner.nextLine();
+                        carDAO.delete(connection, table);
+                    } else if (console == TWO) {
+                        System.out.print(REQUEST_TABLE_NAME);
+                        table = scanner.nextLine();
+
+                        System.out.print(REQUEST_ID);
+                        id = Integer.parseInt(scanner.nextLine());
+
+                        carDAO.delete(connection, table, id);
+                    }
+                    connection.close();
+                    break;
+                case FIVE:
+                    connection.close();
+                    return;
+                default:
+                    System.out.println(INCORRECT_REQUEST);
+            }
+
+            System.out.print(MESSAGE);
         }
     }
 }
