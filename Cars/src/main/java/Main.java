@@ -1,7 +1,6 @@
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
-import java.text.ParseException;
 import java.util.Scanner;
 
 public class Main {
@@ -15,14 +14,14 @@ public class Main {
             "Введите \"Добавить\" или \"Изменить\": ";
     private final static String ADD = "Добавить";
     private final static String CHANGE = "Изменить";
-    private final static String NEW_LINE_MESSAGE = "Введите имя таблицы, id, brand, age_of_creation через пробел: ";
+    private final static String NEW_LINE_MESSAGE = "Введите имя таблицы, brand, age_of_creation через пробел: ";
     private final static String CHANGE_LINE_MESSAGE = "Введите имя таблицы, название столбца, который хотите " +
             "изменить,\nа так же старое и новое значение через пробел: ";
     private final static String DELETE_CHOICE_MESSAGE = "Вы хотите удалить таблицу или строку?\n" +
-            "Введите \"Удалить таблицу\" или \"Удалить строку\" ";
+            "Введите \"Удалить таблицу\" или \"Удалить строку\": ";
     private final static String DELETE_LINE_MESSAGE = "Удалить строку";
     private final static String DELETE_TABLE_MESSAGE = "Удалить таблицу";
-    private final static String REQUEST_OF_DATA = "Введите имя таблицы и brand через пробел: ";
+    private final static String REQUEST_OF_DATA = "Введите имя таблицы и id через пробел: ";
 
     private final static String url = "jdbc:postgresql://localhost:5432/car";
     private final static String user = "postgres";
@@ -55,7 +54,7 @@ public class Main {
                     System.out.print(NEW_LINE_MESSAGE);
                     table = scanner.nextLine();
                     final String[] addInfo = table.split(SPACE);
-                    crud.update(connection, addInfo[0], Integer.parseInt(addInfo[1]), addInfo[2], Integer.parseInt(addInfo[3]));
+                    crud.update(connection, addInfo[0], addInfo[1], Integer.parseInt(addInfo[2]));
                 } else if (console.equalsIgnoreCase(CHANGE)) {
                     System.out.print(CHANGE_LINE_MESSAGE);
                     table = scanner.nextLine();
@@ -75,7 +74,7 @@ public class Main {
                     System.out.print(REQUEST_OF_DATA);
                     table = scanner.nextLine();
                     final String[] deleteInfo = table.split(SPACE);
-                    crud.delete(connection, deleteInfo[0], deleteInfo[1]);
+                    crud.delete(connection, deleteInfo[0], Integer.parseInt(deleteInfo[1]));
                 }
                 connection.close();
                 break;
