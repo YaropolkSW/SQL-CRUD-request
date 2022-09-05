@@ -35,7 +35,6 @@ public class Main {
         final String table;
         final String console;
 
-//        switch (args[0]) {
         switch (scanner.nextLine()) {
             case CREATE:
                 System.out.print(REQUEST_TABLE_NAME);
