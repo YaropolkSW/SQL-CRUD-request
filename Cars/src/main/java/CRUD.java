@@ -7,7 +7,6 @@ public class CRUD {
     private final static String READ_PATTERN = "SELECT * FROM %s;";
     private final static String UPDATE_PATTERN_1 = "INSERT INTO %s(id, brand, age_of_produce) VALUES(%d, \'%s\', %d)";
     private final static String UPDATE_PATTERN_2 = "UPDATE %1$s SET %2$s = \'%4$s\' WHERE %2$s = \'%3$s\'";
-    private final static String UPDATE_PATTERN_3 = "UPDATE %1$s SET %2$s = %4$d WHERE %2$s = %3$d";
     private final static String DELETE_PATTERN_1 = "DROP TABLE IF EXISTS %s;";
     private final static String DELETE_PATTERN_2 = "DELETE FROM %s WHERE brand = \'%s\';";
     private PreparedStatement statement;
@@ -43,16 +42,6 @@ public class CRUD {
                        final String newValue) throws SQLException {
 
         stringStatement = String.format(UPDATE_PATTERN_2, table, column, oldValue, newValue);
-        statement = connection.prepareStatement(stringStatement);
-        statement.execute();
-
-        statement.close();
-    }
-
-    public void update(final Connection connection, final String table, final String column, final int oldValue,
-                       final int newValue) throws SQLException {
-
-        stringStatement = String.format(UPDATE_PATTERN_3, table, column, oldValue, newValue);
         statement = connection.prepareStatement(stringStatement);
         statement.execute();
 
