@@ -1,9 +1,4 @@
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.SQLException;
-import java.util.Properties;
 import java.util.Scanner;
 
 public class UI {
@@ -12,9 +7,6 @@ public class UI {
     private final static int THREE = 3;
     private final static int FOUR = 4;
     private final static int FIVE = 5;
-    private final static String URL = "url";
-    private final static String USER = "user";
-    private final static String PASSWORD = "password";
     private final static String BRAND = "brand";
     private final static String AGE_OF_PRODUCE = "age_of_produce";
     private final static String REQUEST_TABLE_NAME = "Введите имя таблицы: ";
@@ -29,35 +21,16 @@ public class UI {
     private final static String READ_MESSAGE_CHOICE = "Введите 1 чтобы прочитать одну строку или 2, " +
                                                       "чтобы прочитать всю таблицу: ";
     private final static String INCORRECT_REQUEST = "Неверный запрос, введите корректный запрос!";
-    private final static String PATH_TO_PROPERTIES = "src/main/resources/database.properties";
-    private final static String EXCEPTION_MESSAGE = "По данному пути файл не найдет!";
 
     private final static Scanner scanner = new Scanner(System.in);
     private final CarDAO carDAO = new CarDAO();
 
-    public Connection createConnection() throws SQLException {
-        final Properties properties = new Properties();
-
-        try (final FileInputStream fileInputStream = new FileInputStream(PATH_TO_PROPERTIES)) {
-            properties.load(fileInputStream);
-        } catch (IOException e) {
-            System.out.println(EXCEPTION_MESSAGE);
-        }
-
-        final String url = properties.getProperty(URL);
-        final String user = properties.getProperty(USER);
-        final String password = properties.getProperty(PASSWORD);
-
-        return DriverManager.getConnection(url, user, password);
-    }
-
     public boolean userInterface() throws SQLException {
-        final Connection connection = createConnection();
         final Printer printer = new Printer();
         int id;
         int console;
         String table;
-        final DataTransfer dataTransferObject;
+        final Car carObject;
         final int request;
 
         printer.printMessage();
@@ -66,7 +39,6 @@ public class UI {
             request = Integer.parseInt(scanner.nextLine());
         } catch (NumberFormatException e) {
             System.out.println(INCORRECT_REQUEST);
-            connection.close();
             return true;
         }
 
@@ -74,67 +46,71 @@ public class UI {
             case ONE:
                 System.out.print(REQUEST_TABLE_NAME);
                 table = scanner.nextLine();
-                carDAO.create(connection, table);
-                connection.close();
+                carDAO.create(table);
                 return true;
 
             case TWO:
                 System.out.print(READ_MESSAGE_CHOICE);
-                console = Integer.parseInt(scanner.nextLine());
+                try {
+                    console = Integer.parseInt(scanner.nextLine());
+                } catch (NumberFormatException e) {
+                    System.out.println(INCORRECT_REQUEST);
+                    return true;
+                }
 
                 if (console == ONE) {
                     System.out.print(REQUEST_TABLE_NAME);
                     table = scanner.nextLine();
 
-                    if (carDAO.isTableEmpty(connection, table)) {
-                        connection.close();
+                    if (carDAO.isTableEmpty(table)) {
                         return true;
                     }
 
-                    carDAO.choiceOfId(connection, table);
+                    carDAO.choiceOfId(table);
 
                     System.out.print(REQUEST_ID);
                     try {
                         id = Integer.parseInt(scanner.nextLine());
                     } catch (NumberFormatException e) {
                         System.out.println(INCORRECT_REQUEST);
-                        connection.close();
                         return true;
                     }
 
-                    if (!carDAO.isIdPresent(connection, table, id)) {
-                        connection.close();
+                    if (!carDAO.isIdPresent(table, id)) {
                         return true;
                     }
 
-                    dataTransferObject = carDAO.read(connection, table, id);
+                    carObject = carDAO.read(table, id);
 
-                    printer.print(dataTransferObject.getListOfID(), dataTransferObject.getBrandList(),
-                            dataTransferObject.getAgeOfProduceList());
+                    printer.print(carObject.getListOfID(), carObject.getBrandList(),
+                            carObject.getAgeOfProduceList());
 
                 } else if (console == TWO) {
                     System.out.print(REQUEST_TABLE_NAME);
                     table = scanner.nextLine();
 
-                    if (carDAO.isTableEmpty(connection, table)) {
-                        connection.close();
+                    if (carDAO.isTableEmpty(table)) {
                         return true;
                     }
 
-                    dataTransferObject = carDAO.readAll(connection, table);
+                    carObject = carDAO.readAll(table);
 
-                    printer.print(dataTransferObject.getListOfID(), dataTransferObject.getBrandList(),
-                            dataTransferObject.getAgeOfProduceList());
+                    printer.print(carObject.getListOfID(), carObject.getBrandList(),
+                            carObject.getAgeOfProduceList());
 
                 } else {
                     System.out.println(INCORRECT_REQUEST);
                 }
-                connection.close();
                 return true;
 
             case THREE:
                 System.out.print(UPDATE_MESSAGE_CHOICE);
-                console = Integer.parseInt(scanner.nextLine());
+                try {
+                    console = Integer.parseInt(scanner.nextLine());
+                } catch (NumberFormatException e) {
+                    System.out.println(INCORRECT_REQUEST);
+                    return true;
+                }
 
                 if (console == ONE) {
                     System.out.print(REQUEST_TABLE_NAME);
@@ -149,33 +125,29 @@ public class UI {
                         ageOfProduce = Integer.parseInt(scanner.nextLine());
                     } catch (NumberFormatException e) {
                         System.out.println(INCORRECT_REQUEST);
-                        connection.close();
                         return true;
                     }
 
-                    carDAO.update(connection, table, brand, ageOfProduce);
+                    carDAO.update(table, brand, ageOfProduce);
                 } else if (console == TWO) {
                     System.out.print(REQUEST_TABLE_NAME);
                     table = scanner.nextLine();
 
-                    if (carDAO.isTableEmpty(connection, table)) {
-                        connection.close();
+                    if (carDAO.isTableEmpty(table)) {
                         return true;
                     }
 
-                    carDAO.choiceOfId(connection, table);
+                    carDAO.choiceOfId(table);
 
                     System.out.print(REQUEST_ID);
                     try {
                         id = Integer.parseInt(scanner.nextLine());
                     } catch (NumberFormatException e) {
                         System.out.println(INCORRECT_REQUEST);
-                        connection.close();
                         return true;
                     }
 
-                    if (!carDAO.isIdPresent(connection, table, id)) {
-                        connection.close();
+                    if (!carDAO.isIdPresent(table, id)) {
                         return true;
                     }
 
@@ -185,7 +157,6 @@ public class UI {
                         columnNumber = Integer.parseInt(scanner.nextLine());
                     } catch (NumberFormatException e) {
                         System.out.println(INCORRECT_REQUEST);
-                        connection.close();
                         return true;
                     }
                     final String columnName;
@@ -196,60 +167,58 @@ public class UI {
                         columnName = AGE_OF_PRODUCE;
                     } else {
                         System.out.println(INCORRECT_REQUEST);
-                        connection.close();
                         return true;
                     }
                     System.out.print(REQUEST_NEW_VALUE);
                     final String newValue = scanner.nextLine();
 
-                    carDAO.update(connection, table, id, columnName, newValue);
+                    carDAO.update(table, id, columnName, newValue);
                 } else {
                     System.out.println(INCORRECT_REQUEST);
                 }
-                connection.close();
                 return true;
 
             case FOUR:
                 System.out.print(DELETE_CHOICE_MESSAGE);
-                console = Integer.parseInt(scanner.nextLine());
+                try {
+                    console = Integer.parseInt(scanner.nextLine());
+                } catch (NumberFormatException e) {
+                    System.out.println(INCORRECT_REQUEST);
+                    return true;
+                }
 
                 if (console == ONE) {
                     System.out.print(REQUEST_TABLE_NAME);
                     table = scanner.nextLine();
-                    carDAO.delete(connection, table);
+                    carDAO.deleteTable(table);
                 } else if (console == TWO) {
                     System.out.print(REQUEST_TABLE_NAME);
                     table = scanner.nextLine();
 
-                    if (carDAO.isTableEmpty(connection, table)) {
-                        connection.close();
+                    if (carDAO.isTableEmpty(table)) {
                         return true;
                     }
 
-                    carDAO.choiceOfId(connection, table);
+                    carDAO.choiceOfId(table);
 
                     System.out.print(REQUEST_ID);
                     try {
                         id = Integer.parseInt(scanner.nextLine());
                     } catch (NumberFormatException e) {
                         System.out.println(INCORRECT_REQUEST);
-                        connection.close();
                         return true;
                     }
 
-                    if (!carDAO.isIdPresent(connection, table, id)) {
-                        connection.close();
+                    if (!carDAO.isIdPresent(table, id)) {
                         return true;
                     }
 
-                    carDAO.delete(connection, table, id);
+                    carDAO.delete(table, id);
                 } else {
                     System.out.println(INCORRECT_REQUEST);
                 }
-                connection.close();
                 return true;
             case FIVE:
-                connection.close();
                 return false;
             default:
                 System.out.println(INCORRECT_REQUEST);
