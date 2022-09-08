@@ -23,4 +23,6 @@ public interface DAO {
     boolean isTableEmpty(final String table) throws SQLException;
 
     void choiceOfId(final String table) throws SQLException;
+
+    boolean isTableNameEmpty(final String table);
 }

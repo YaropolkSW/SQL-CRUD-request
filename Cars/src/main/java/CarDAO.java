@@ -8,6 +8,7 @@ import java.util.Properties;
 public class CarDAO implements DAO {
     private final static String PATH_TO_PROPERTIES = "src/main/resources/database.properties";
     private final static String EXCEPTION_MESSAGE = "По данному пути файл не найдет!";
+    private final static String EMPTY_TABLE_NAME = "Пустое имя таблицы!";
     private final static String EMPTY_TABLE = "Таблица пуста!";
     private final static String WRONG_ID_PATTERN = "Несуществующий ID!";
     private final static String CHOICE_OF_ID_PATTERN = "Пожалуйста, выберите один из приведенных ID: ";
@@ -212,5 +213,14 @@ public class CarDAO implements DAO {
     public void choiceOfId(final String table) throws SQLException {
         System.out.println(CHOICE_OF_ID_PATTERN);
         System.out.println(readAllId(table));
+    }
+
+    public boolean isTableNameEmpty(final String table) {
+        if (table.isEmpty()) {
+            System.out.println(EMPTY_TABLE_NAME);
+            return true;
+        } else {
+            return false;
+        }
     }
 }

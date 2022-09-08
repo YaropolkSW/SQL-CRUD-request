@@ -46,6 +46,11 @@ public class UI {
             case ONE:
                 System.out.print(REQUEST_TABLE_NAME);
                 table = scanner.nextLine();
+
+                if (carDAO.isTableNameEmpty(table)) {
+                    return true;
+                }
+
                 carDAO.create(table);
                 return true;
 
@@ -61,6 +66,10 @@ public class UI {
                 if (console == ONE) {
                     System.out.print(REQUEST_TABLE_NAME);
                     table = scanner.nextLine();
+
+                    if (carDAO.isTableNameEmpty(table)) {
+                        return true;
+                    }
 
                     if (carDAO.isTableEmpty(table)) {
                         return true;
@@ -89,6 +98,10 @@ public class UI {
                     System.out.print(REQUEST_TABLE_NAME);
                     table = scanner.nextLine();
 
+                    if (carDAO.isTableNameEmpty(table)) {
+                        return true;
+                    }
+
                     if (carDAO.isTableEmpty(table)) {
                         return true;
                     }
@@ -116,6 +129,10 @@ public class UI {
                     System.out.print(REQUEST_TABLE_NAME);
                     table = scanner.nextLine();
 
+                    if (carDAO.isTableNameEmpty(table)) {
+                        return true;
+                    }
+
                     System.out.print(REQUEST_BRAND);
                     final String brand = scanner.nextLine();
 
@@ -132,6 +149,10 @@ public class UI {
                 } else if (console == TWO) {
                     System.out.print(REQUEST_TABLE_NAME);
                     table = scanner.nextLine();
+
+                    if (carDAO.isTableNameEmpty(table)) {
+                        return true;
+                    }
 
                     if (carDAO.isTableEmpty(table)) {
                         return true;
@@ -190,10 +211,19 @@ public class UI {
                 if (console == ONE) {
                     System.out.print(REQUEST_TABLE_NAME);
                     table = scanner.nextLine();
+
+                    if (carDAO.isTableNameEmpty(table)) {
+                        return true;
+                    }
+
                     carDAO.deleteTable(table);
                 } else if (console == TWO) {
                     System.out.print(REQUEST_TABLE_NAME);
                     table = scanner.nextLine();
+
+                    if (carDAO.isTableNameEmpty(table)) {
+                        return true;
+                    }
 
                     if (carDAO.isTableEmpty(table)) {
                         return true;
