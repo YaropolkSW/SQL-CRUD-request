@@ -1,7 +1,7 @@
-import java.sql.SQLException;
+import java.util.List;
 import java.util.Scanner;
 
-public class UI {
+public class UserInterface {
     private final static int ONE = 1;
     private final static int TWO = 2;
     private final static int THREE = 3;
@@ -26,14 +26,15 @@ public class UI {
     private final static String INCORRECT_REQUEST = "Некорректный параметр!";
 
     private final static Scanner scanner = new Scanner(System.in);
-    private final CarDAO carDAO = new CarDAO();
+    private final CarDAOImpl carDAOImpl = new CarDAOImpl();
 
-    public boolean userInterface() throws SQLException {
+    public boolean showUserInterface() {
         final Printer printer = new Printer();
         int id;
         int console;
         String table;
         final Car carObject;
+        final List<Car> cars;
         final int request;
 
         printer.printMessage();
@@ -50,14 +51,13 @@ public class UI {
                 System.out.print(REQUEST_TABLE_NAME);
                 table = scanner.nextLine();
 
-                if (carDAO.isInputLineEmpty(table)) {
-                    return true;
-                }
-
-                carDAO.create(table);
+                carDAOImpl.create(table);
                 return true;
 
             case TWO:
+                System.out.print(REQUEST_TABLE_NAME);
+                table = scanner.nextLine();
+
                 System.out.print(READ_MESSAGE_CHOICE);
                 try {
                     console = Integer.parseInt(scanner.nextLine());
@@ -67,18 +67,7 @@ public class UI {
                 }
 
                 if (console == ONE) {
-                    System.out.print(REQUEST_TABLE_NAME);
-                    table = scanner.nextLine();
-
-                    if (carDAO.isInputLineEmpty(table)) {
-                        return true;
-                    }
-
-                    if (carDAO.isTableEmpty(table)) {
-                        return true;
-                    }
-
-                    carDAO.choiceOfId(table);
+                    carDAOImpl.choiceOfId(table);
 
                     System.out.print(REQUEST_ID);
                     try {
@@ -88,31 +77,18 @@ public class UI {
                         return true;
                     }
 
-                    if (!carDAO.isIdPresent(table, id)) {
-                        return true;
-                    }
+                    carObject = carDAOImpl.read(table, id);
 
-                    carObject = carDAO.read(table, id);
-
-                    printer.print(carObject.getListOfID(), carObject.getBrandList(), carObject.getModelList(),
-                            carObject.getAgeOfProduceList());
+                    printer.print(carObject);
 
                 } else if (console == TWO) {
-                    System.out.print(REQUEST_TABLE_NAME);
-                    table = scanner.nextLine();
+                    cars = carDAOImpl.readAll(table);
 
-                    if (carDAO.isInputLineEmpty(table)) {
-                        return true;
+                    printer.printSeparator();
+                    for (Car car : cars) {
+                        printer.print(car);
+                        printer.printSeparator();
                     }
-
-                    if (carDAO.isTableEmpty(table)) {
-                        return true;
-                    }
-
-                    carObject = carDAO.readAll(table);
-
-                    printer.print(carObject.getListOfID(), carObject.getBrandList(), carObject.getModelList(),
-                            carObject.getAgeOfProduceList());
 
                 } else {
                     System.out.println(INCORRECT_REQUEST);
@@ -120,6 +96,9 @@ public class UI {
                 return true;
 
             case THREE:
+                System.out.print(REQUEST_TABLE_NAME);
+                table = scanner.nextLine();
+
                 System.out.print(UPDATE_MESSAGE_CHOICE);
                 try {
                     console = Integer.parseInt(scanner.nextLine());
@@ -129,26 +108,11 @@ public class UI {
                 }
 
                 if (console == ONE) {
-                    System.out.print(REQUEST_TABLE_NAME);
-                    table = scanner.nextLine();
-
-                    if (carDAO.isInputLineEmpty(table)) {
-                        return true;
-                    }
-
                     System.out.print(REQUEST_BRAND);
                     final String brand = scanner.nextLine();
 
-                    if (carDAO.isInputLineEmpty(brand)) {
-                        return true;
-                    }
-
                     System.out.print(REQUEST_MODEL);
                     final String model = scanner.nextLine();
-
-                    if (carDAO.isInputLineEmpty(model)) {
-                        return true;
-                    }
 
                     System.out.print(REQUEST_AGE_OF_PRODUCE);
                     final int ageOfProduce;
@@ -159,30 +123,15 @@ public class UI {
                         return true;
                     }
 
-                    carDAO.update(table, brand, model, ageOfProduce);
+                    carDAOImpl.update(table, brand, model, ageOfProduce);
                 } else if (console == TWO) {
-                    System.out.print(REQUEST_TABLE_NAME);
-                    table = scanner.nextLine();
-
-                    if (carDAO.isInputLineEmpty(table)) {
-                        return true;
-                    }
-
-                    if (carDAO.isTableEmpty(table)) {
-                        return true;
-                    }
-
-                    carDAO.choiceOfId(table);
+                    carDAOImpl.choiceOfId(table);
 
                     System.out.print(REQUEST_ID);
                     try {
                         id = Integer.parseInt(scanner.nextLine());
                     } catch (NumberFormatException e) {
                         System.out.println(INCORRECT_REQUEST);
-                        return true;
-                    }
-
-                    if (!carDAO.isIdPresent(table, id)) {
                         return true;
                     }
 
@@ -209,17 +158,16 @@ public class UI {
                     System.out.print(REQUEST_NEW_VALUE);
                     final String newValue = scanner.nextLine();
 
-                    if (carDAO.isInputLineEmpty(newValue)) {
-                        return true;
-                    }
-
-                    carDAO.update(table, id, columnName, newValue);
+                    carDAOImpl.update(table, id, columnName, newValue);
                 } else {
                     System.out.println(INCORRECT_REQUEST);
                 }
                 return true;
 
             case FOUR:
+                System.out.print(REQUEST_TABLE_NAME);
+                table = scanner.nextLine();
+
                 System.out.print(DELETE_CHOICE_MESSAGE);
                 try {
                     console = Integer.parseInt(scanner.nextLine());
@@ -229,27 +177,9 @@ public class UI {
                 }
 
                 if (console == ONE) {
-                    System.out.print(REQUEST_TABLE_NAME);
-                    table = scanner.nextLine();
-
-                    if (carDAO.isInputLineEmpty(table)) {
-                        return true;
-                    }
-
-                    carDAO.deleteTable(table);
+                    carDAOImpl.deleteTable(table);
                 } else if (console == TWO) {
-                    System.out.print(REQUEST_TABLE_NAME);
-                    table = scanner.nextLine();
-
-                    if (carDAO.isInputLineEmpty(table)) {
-                        return true;
-                    }
-
-                    if (carDAO.isTableEmpty(table)) {
-                        return true;
-                    }
-
-                    carDAO.choiceOfId(table);
+                    carDAOImpl.choiceOfId(table);
 
                     System.out.print(REQUEST_ID);
                     try {
@@ -259,11 +189,7 @@ public class UI {
                         return true;
                     }
 
-                    if (!carDAO.isIdPresent(table, id)) {
-                        return true;
-                    }
-
-                    carDAO.delete(table, id);
+                    carDAOImpl.delete(table, id);
                 } else {
                     System.out.println(INCORRECT_REQUEST);
                 }

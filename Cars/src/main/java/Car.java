@@ -1,33 +1,28 @@
-import java.util.List;
-
 public class Car {
-    private final List<Integer> idList;
-    private final List<String> brandList;
-    private final List<String> modelList;
-    private final List<Integer> ageOfProduceList;
+    private final static String OUTPUT_PATTERN = "ID - %d\nBrand - %s\nModel - %s\nAge of produce - %d\n";
+    private int id;
+    private String brand;
+    private String model;
+    private int ageOfProduce;
 
-    public Car(final List<Integer> idList, final List<String> brandList, final List<String> modelList,
-               final List<Integer> ageOfProduceList) {
-
-        this.idList = idList;
-        this.brandList = brandList;
-        this.modelList = modelList;
-        this.ageOfProduceList = ageOfProduceList;
+    public void setId(final int id) {
+        this.id = id;
     }
 
-    public List<Integer> getListOfID() {
-        return idList;
+    public void setBrand(final String brand) {
+        this.brand = brand;
     }
 
-    public List<String> getBrandList() {
-        return brandList;
+    public void setModel(final String model) {
+        this.model = model;
     }
 
-    public List<String> getModelList() {
-        return modelList;
+    public void setAgeOfProduce(final int ageOfProduce) {
+        this.ageOfProduce = ageOfProduce;
     }
 
-    public List<Integer> getAgeOfProduceList() {
-        return ageOfProduceList;
+    @Override
+    public String toString() {
+        return String.format(OUTPUT_PATTERN, id, brand, model, ageOfProduce);
     }
 }
