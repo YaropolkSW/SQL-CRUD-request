@@ -8,7 +8,7 @@ import java.util.Properties;
 public class CarDAO implements DAO {
     private final static String PATH_TO_PROPERTIES = "src/main/resources/database.properties";
     private final static String EXCEPTION_MESSAGE = "По данному пути файл не найдет!";
-    private final static String EMPTY_TABLE_NAME = "Пустое имя таблицы!";
+    private final static String INCORRECT_REQUEST = "Некорректный параметр!";
     private final static String EMPTY_TABLE = "Таблица пуста!";
     private final static String WRONG_ID_PATTERN = "Несуществующий ID!";
     private final static String CHOICE_OF_ID_PATTERN = "Пожалуйста, выберите один из приведенных ID: ";
@@ -143,10 +143,12 @@ public class CarDAO implements DAO {
         return idList;
     }
 
-    public void update(final String table, final String brand, final String model, final int ageOfProduce) throws SQLException {
+    public void update(final String table, final String brand, final String model,
+                       final int ageOfProduce) throws SQLException {
+
         connection = createConnection();
 
-        stringStatement = String.format(ADD_PATTERN, table, brand, model, ageOfProduce);///////////////CHANGE ADD_PATTERN
+        stringStatement = String.format(ADD_PATTERN, table, brand, model, ageOfProduce);
         statement = connection.prepareStatement(stringStatement);
         statement.execute();
 
@@ -220,9 +222,9 @@ public class CarDAO implements DAO {
         System.out.println(readAllId(table));
     }
 
-    public boolean isTableNameEmpty(final String table) {
+    public boolean isInputLineEmpty(final String table) {
         if (table.isEmpty()) {
-            System.out.println(EMPTY_TABLE_NAME);
+            System.out.println(INCORRECT_REQUEST);
             return true;
         } else {
             return false;

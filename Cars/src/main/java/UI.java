@@ -23,7 +23,7 @@ public class UI {
     private final static String REQUEST_NEW_VALUE = "Введите новое значение: ";
     private final static String READ_MESSAGE_CHOICE = "Введите 1 чтобы прочитать одну строку или 2, " +
                                                       "чтобы прочитать всю таблицу: ";
-    private final static String INCORRECT_REQUEST = "Неверный запрос, введите корректный запрос!";
+    private final static String INCORRECT_REQUEST = "Некорректный параметр!";
 
     private final static Scanner scanner = new Scanner(System.in);
     private final CarDAO carDAO = new CarDAO();
@@ -50,7 +50,7 @@ public class UI {
                 System.out.print(REQUEST_TABLE_NAME);
                 table = scanner.nextLine();
 
-                if (carDAO.isTableNameEmpty(table)) {
+                if (carDAO.isInputLineEmpty(table)) {
                     return true;
                 }
 
@@ -70,7 +70,7 @@ public class UI {
                     System.out.print(REQUEST_TABLE_NAME);
                     table = scanner.nextLine();
 
-                    if (carDAO.isTableNameEmpty(table)) {
+                    if (carDAO.isInputLineEmpty(table)) {
                         return true;
                     }
 
@@ -101,7 +101,7 @@ public class UI {
                     System.out.print(REQUEST_TABLE_NAME);
                     table = scanner.nextLine();
 
-                    if (carDAO.isTableNameEmpty(table)) {
+                    if (carDAO.isInputLineEmpty(table)) {
                         return true;
                     }
 
@@ -132,7 +132,7 @@ public class UI {
                     System.out.print(REQUEST_TABLE_NAME);
                     table = scanner.nextLine();
 
-                    if (carDAO.isTableNameEmpty(table)) {
+                    if (carDAO.isInputLineEmpty(table)) {
                         return true;
                     }
 
@@ -141,6 +141,10 @@ public class UI {
 
                     System.out.print(REQUEST_MODEL);
                     final String model = scanner.nextLine();
+
+                    if (carDAO.isInputLineEmpty(brand) || carDAO.isInputLineEmpty(model)) {
+                        return true;
+                    }
 
                     System.out.print(REQUEST_AGE_OF_PRODUCE);
                     final int ageOfProduce;
@@ -156,7 +160,7 @@ public class UI {
                     System.out.print(REQUEST_TABLE_NAME);
                     table = scanner.nextLine();
 
-                    if (carDAO.isTableNameEmpty(table)) {
+                    if (carDAO.isInputLineEmpty(table)) {
                         return true;
                     }
 
@@ -201,6 +205,10 @@ public class UI {
                     System.out.print(REQUEST_NEW_VALUE);
                     final String newValue = scanner.nextLine();
 
+                    if (carDAO.isInputLineEmpty(newValue)) {
+                        return true;
+                    }
+
                     carDAO.update(table, id, columnName, newValue);
                 } else {
                     System.out.println(INCORRECT_REQUEST);
@@ -220,7 +228,7 @@ public class UI {
                     System.out.print(REQUEST_TABLE_NAME);
                     table = scanner.nextLine();
 
-                    if (carDAO.isTableNameEmpty(table)) {
+                    if (carDAO.isInputLineEmpty(table)) {
                         return true;
                     }
 
@@ -229,7 +237,7 @@ public class UI {
                     System.out.print(REQUEST_TABLE_NAME);
                     table = scanner.nextLine();
 
-                    if (carDAO.isTableNameEmpty(table)) {
+                    if (carDAO.isInputLineEmpty(table)) {
                         return true;
                     }
 

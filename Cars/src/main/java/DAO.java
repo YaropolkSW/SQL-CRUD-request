@@ -1,4 +1,3 @@
-import java.sql.Connection;
 import java.sql.SQLException;
 
 public interface DAO {
@@ -24,5 +23,5 @@ public interface DAO {
 
     void choiceOfId(final String table) throws SQLException;
 
-    boolean isTableNameEmpty(final String table);
+    boolean isInputLineEmpty(final String table);
 }
