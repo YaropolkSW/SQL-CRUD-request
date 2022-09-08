@@ -139,10 +139,14 @@ public class UI {
                     System.out.print(REQUEST_BRAND);
                     final String brand = scanner.nextLine();
 
+                    if (carDAO.isInputLineEmpty(brand)) {
+                        return true;
+                    }
+
                     System.out.print(REQUEST_MODEL);
                     final String model = scanner.nextLine();
 
-                    if (carDAO.isInputLineEmpty(brand) || carDAO.isInputLineEmpty(model)) {
+                    if (carDAO.isInputLineEmpty(model)) {
                         return true;
                     }
 
