@@ -8,12 +8,15 @@ public class UI {
     private final static int FOUR = 4;
     private final static int FIVE = 5;
     private final static String BRAND = "brand";
+    private final static String MODEL = "model";
     private final static String AGE_OF_PRODUCE = "age_of_produce";
     private final static String REQUEST_TABLE_NAME = "Введите имя таблицы: ";
-    private final static String REQUEST_COLUMN_NAME = "Введите 1, чтобы изменить брэнд или 2, " +
-                                                      "чтобы изменить год производства: ";
+    private final static String REQUEST_COLUMN_NAME = "Введите 1, чтобы изменить брэнд,\n" +
+                                                      "        2, чтобы изменить модель,\n" +
+                                                      "        3, чтобы изменить год производства: ";
     private final static String REQUEST_ID = "Введите id: ";
     private final static String REQUEST_BRAND = "Введите брэнд: ";
+    private final static String REQUEST_MODEL = "Введите модель: ";
     private final static String REQUEST_AGE_OF_PRODUCE = "Введите год изготовления: ";
     private final static String UPDATE_MESSAGE_CHOICE = "Введите 1 чтобы добавить строку или 2, чтобы изменить строку: ";
     private final static String DELETE_CHOICE_MESSAGE = "Введите 1 чтобы удалить таблицу или 2, чтобы удалить строку: ";
@@ -91,7 +94,7 @@ public class UI {
 
                     carObject = carDAO.read(table, id);
 
-                    printer.print(carObject.getListOfID(), carObject.getBrandList(),
+                    printer.print(carObject.getListOfID(), carObject.getBrandList(), carObject.getModelList(),
                             carObject.getAgeOfProduceList());
 
                 } else if (console == TWO) {
@@ -108,7 +111,7 @@ public class UI {
 
                     carObject = carDAO.readAll(table);
 
-                    printer.print(carObject.getListOfID(), carObject.getBrandList(),
+                    printer.print(carObject.getListOfID(), carObject.getBrandList(), carObject.getModelList(),
                             carObject.getAgeOfProduceList());
 
                 } else {
@@ -136,6 +139,9 @@ public class UI {
                     System.out.print(REQUEST_BRAND);
                     final String brand = scanner.nextLine();
 
+                    System.out.print(REQUEST_MODEL);
+                    final String model = scanner.nextLine();
+
                     System.out.print(REQUEST_AGE_OF_PRODUCE);
                     final int ageOfProduce;
                     try {
@@ -145,7 +151,7 @@ public class UI {
                         return true;
                     }
 
-                    carDAO.update(table, brand, ageOfProduce);
+                    carDAO.update(table, brand, model, ageOfProduce);
                 } else if (console == TWO) {
                     System.out.print(REQUEST_TABLE_NAME);
                     table = scanner.nextLine();
@@ -185,6 +191,8 @@ public class UI {
                     if (columnNumber == ONE) {
                         columnName = BRAND;
                     } else if (columnNumber == TWO) {
+                        columnName = MODEL;
+                    } else if (columnNumber == THREE) {
                         columnName = AGE_OF_PRODUCE;
                     } else {
                         System.out.println(INCORRECT_REQUEST);

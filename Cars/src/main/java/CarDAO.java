@@ -14,6 +14,7 @@ public class CarDAO implements DAO {
     private final static String CHOICE_OF_ID_PATTERN = "Пожалуйста, выберите один из приведенных ID: ";
     private final static String ID = "id";
     private final static String BRAND = "brand";
+    private final static String MODEL = "model";
     private final static String AGE_OF_PRODUCE = "age_of_produce";
     private String stringStatement;
     private PreparedStatement statement;
@@ -77,6 +78,7 @@ public class CarDAO implements DAO {
     public Car read(final String table, final int id) throws SQLException {
         final List<Integer> idList = new ArrayList<>();
         final List<String> brandList = new ArrayList<>();
+        final List<String> modelList = new ArrayList<>();
         final List<Integer> ageOfProduceList = new ArrayList<>();
         connection = createConnection();
 
@@ -86,6 +88,7 @@ public class CarDAO implements DAO {
 
         if (resultSet.next()) {
             idList.add(id);
+            modelList.add(resultSet.getString(MODEL));
             brandList.add(resultSet.getString(BRAND));
             ageOfProduceList.add(resultSet.getInt(AGE_OF_PRODUCE));
         }
@@ -93,12 +96,13 @@ public class CarDAO implements DAO {
         statement.close();
         connection.close();
 
-        return new Car(idList, brandList, ageOfProduceList);
+        return new Car(idList, brandList, modelList, ageOfProduceList);
     }
 
     public Car readAll(final String table) throws SQLException {
         final List<Integer> idList = readAllId(table);
         final List<String> brandList = new ArrayList<>();
+        final List<String> modelList = new ArrayList<>();
         final List<Integer> ageOfProduceList = new ArrayList<>();
         connection = createConnection();
 
@@ -110,6 +114,7 @@ public class CarDAO implements DAO {
             final ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
                 brandList.add(resultSet.getString(BRAND));
+                modelList.add(resultSet.getString(MODEL));
                 ageOfProduceList.add(resultSet.getInt(AGE_OF_PRODUCE));
             }
         }
@@ -117,7 +122,7 @@ public class CarDAO implements DAO {
         statement.close();
         connection.close();
 
-        return new Car(idList, brandList, ageOfProduceList);
+        return new Car(idList, brandList, modelList, ageOfProduceList);
     }
 
     private List<Integer> readAllId(final String table) throws SQLException {
@@ -138,10 +143,10 @@ public class CarDAO implements DAO {
         return idList;
     }
 
-    public void update(final String table, final String brand, final int ageOfProduce) throws SQLException {
+    public void update(final String table, final String brand, final String model, final int ageOfProduce) throws SQLException {
         connection = createConnection();
 
-        stringStatement = String.format(ADD_PATTERN, table, brand, ageOfProduce);
+        stringStatement = String.format(ADD_PATTERN, table, brand, model, ageOfProduce);///////////////CHANGE ADD_PATTERN
         statement = connection.prepareStatement(stringStatement);
         statement.execute();
 

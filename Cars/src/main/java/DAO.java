@@ -8,7 +8,7 @@ public interface DAO {
 
     Car readAll(final String table) throws SQLException;
 
-    void update(final String table, final String brand,
+    void update(final String table, final String brand, final String model,
                 final int ageOfProduce) throws SQLException;
 
     void update(final String table, final int id, final String column,
