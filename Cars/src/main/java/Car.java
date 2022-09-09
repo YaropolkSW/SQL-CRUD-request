@@ -1,9 +1,9 @@
 public class Car {
-    private final static String OUTPUT_PATTERN = "ID - %d\nBrand - %s\nModel - %s\nAge of produce - %d\n";
     private int id;
     private String brand;
     private String model;
     private int ageOfProduce;
+    private int price;
 
     public void setId(final int id) {
         this.id = id;
@@ -21,8 +21,12 @@ public class Car {
         this.ageOfProduce = ageOfProduce;
     }
 
+    public void setPrice(final int price) {
+        this.price = price;
+    }
+
     @Override
     public String toString() {
-        return String.format(OUTPUT_PATTERN, id, brand, model, ageOfProduce);
+        return String.format("ID - %d\nBrand - %s\nModel - %s\nAge of produce - %d\nPrice - %d\n", id, brand, model, ageOfProduce, price);
     }
 }

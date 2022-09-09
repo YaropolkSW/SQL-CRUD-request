@@ -1,19 +1,19 @@
 import java.util.List;
 
 public interface CarDAO {
-    void create(final String table);
+    void createTable();
 
-    Car read(final String table, final int id);
+    Car read(final int id);
 
-    List<Car> readAll(final String table);
+    List<Car> readAll();
 
-    void update(final String table, final String brand, final String model, final int ageOfProduce);
+    void save(final String brand, final String model, final int ageOfProduce, final int price);
 
-    void update(final String table, final int id, final String column, final String newValue);
+    void update(final int id, final int newPrice);
 
-    void deleteTable(final String table);
+    void deleteTable();
 
-    void delete(final String table, final int id);
+    void delete(final int id);
 
-    void choiceOfId(final String table);
+    void choiceOfId();
 }
