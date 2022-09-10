@@ -1,3 +1,7 @@
+package ui;
+
+import dao.Car;
+
 public class Printer {
     private final static String MESSAGE = "1 для добавления таблицы\n" +
                                           "2 для просмотра таблицы\n" +

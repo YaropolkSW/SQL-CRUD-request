@@ -1,3 +1,11 @@
+package ui;
+
+import dao.Car;
+import dao.CarDAO;
+import dao.DAO;
+import factory.ConnectionFactory;
+import factory.StatementFactory;
+
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.sql.*;
@@ -45,7 +53,7 @@ public class CarDAOImpl implements CarDAO {
     }
 
     public void createTable() {
-        final DAO dao = new DAO();
+        new DAO();
     }
 
     public Car read(final int id) {

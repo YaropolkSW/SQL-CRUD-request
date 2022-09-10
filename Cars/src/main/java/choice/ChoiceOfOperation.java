@@ -1,16 +1,12 @@
+package choice;
+
 public enum ChoiceOfOperation {
 
-    CREATE(1),
-    READ(2),
-    UPDATE(3),
-    DELETE(4),
-    EXIT(5);
-
-    private final int operation;
-
-    ChoiceOfOperation(final int operation) {
-        this.operation = operation;
-    }
+    CREATE,
+    READ,
+    UPDATE,
+    DELETE,
+    EXIT;
 
     public static ChoiceOfOperation getOperation(final int operation) {
         switch (operation) {
@@ -25,7 +21,7 @@ public enum ChoiceOfOperation {
             case 5:
                 return ChoiceOfOperation.EXIT;
             default:
-                return null;
+                throw new NumberFormatException();
         }
     }
 }
