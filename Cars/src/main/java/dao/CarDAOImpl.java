@@ -1,4 +1,4 @@
-package ui;
+package dao;
 
 import dao.Car;
 import dao.CarDAO;
@@ -87,7 +87,6 @@ public class CarDAOImpl implements CarDAO {
 
     public List<Car> readAll() {
         final List<Car> carList = new ArrayList<>();
-        final List<Integer> idList = readAllId();
 
         final Connection connection = connectionFactory.createConnection();
 
@@ -95,19 +94,16 @@ public class CarDAOImpl implements CarDAO {
         final PreparedStatement statement = statementFactory.prepareStatement(connection, stringStatement);
 
         try {
-            for (final Integer element : idList) {
-                statement.setInt(1, element);
                 final ResultSet resultSet = statement.executeQuery();
                 while (resultSet.next()) {
                     final Car car = new Car();
-                    car.setId(element);
+                    car.setId(resultSet.getInt(ID));
                     car.setBrand(resultSet.getString(BRAND));
                     car.setModel(resultSet.getString(MODEL));
                     car.setAgeOfProduce(resultSet.getInt(AGE_OF_PRODUCE));
                     car.setPrice(resultSet.getInt(PRICE));
                     carList.add(car);
                 }
-            }
         } catch (SQLException e) {
             System.out.println(GET_VALUES_ERROR_MESSAGE);
         }
